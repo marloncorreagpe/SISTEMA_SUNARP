@@ -1,80 +1,84 @@
-# Sistema SUNARP - Seguimiento Automatizado de Titulos Registrales
+# Sistema SUNARP
 
-Proyecto final del curso **Fundamentos de Programacion - CIIN1205P**.
+Este repositorio contiene el proyecto final del curso **Fundamentos de Programacion - CIIN1205P**.
 
-El sistema automatiza el seguimiento de titulos registrales SUNARP que antes se controlaba manualmente en hojas de calculo. Permite registrar, listar, buscar, actualizar estados, eliminar registros, generar estadisticas, reportar avance por bloque, exportar resultados a CSV, validar partidas internas en SQL y revisar historial de cambios.
+El trabajo nace de un problema observado en el seguimiento de titulos registrales. El control se realizaba de forma manual, revisando datos uno por uno y anotando resultados en hojas de calculo. Con ese metodo era facil perder tiempo, duplicar informacion o confundir datos importantes como titulo, oficio o partida.
 
-## Tecnologia
+Por eso se desarrollo un sistema en Python que permite llevar el control de los titulos desde una sola aplicacion. El programa registra informacion, consulta titulos, actualiza estados, muestra reportes por bloque, genera estadisticas y exporta resultados para dejar evidencia del avance.
 
-- Lenguaje: Python
-- Base de datos: MySQL/MariaDB
-- Interfaz: consola y formularios Tkinter
-- Pruebas: unittest
+## Datos generales
 
-## Estructura
+- Curso: Fundamentos de Programacion - CIIN1205P
+- Lenguaje usado: Python
+- Base de datos: SQL 2022 como referencia academica del proyecto
+- Ejecucion local probada: MySQL/MariaDB con XAMPP
+- Interfaz: menu en consola y formularios en Tkinter
+
+## Carpetas principales
 
 ```text
-src/        Codigo fuente principal
-sql/        Scripts de base de datos, carga demo y consultas
+src/        Codigo fuente del sistema
+sql/        Scripts para crear y cargar la base de datos
 tests/      Pruebas automatizadas
-docs/       Documentacion, pseudocodigo, matriz de pruebas y evidencias
-salidas/    Archivos de salida generados por el sistema
-*.bat       Accesos rapidos para Windows
+docs/       Documentacion tecnica del proyecto
+salidas/    Evidencias y archivos generados
 ```
 
-## Instalacion rapida
+## Como ejecutar
 
-1. Instalar dependencias:
+1. Instalar las dependencias de Python.
 
 ```bash
 pip install -r requirements.txt
 ```
 
-2. Iniciar MySQL/MariaDB, por ejemplo desde XAMPP.
+2. Iniciar el servicio de base de datos.
 
-3. Cargar la base de datos:
+Para la prueba local se uso XAMPP con MySQL/MariaDB. Los scripts SQL estan en la carpeta `sql/`.
+
+3. Cargar la base de datos.
 
 ```bat
 CARGAR_BASE_DATOS.bat
 ```
 
-4. Ejecutar el menu principal:
+4. Abrir el menu principal.
 
 ```bat
 EJECUTAR_MENU.bat
 ```
 
-5. Ejecutar formularios graficos:
+5. Abrir los formularios graficos.
 
 ```bat
 FORMULARIOS.bat
 ```
 
-## Funciones principales
+## Que permite hacer
 
-- Registrar nuevo titulo.
-- Listar titulos.
-- Buscar titulo SUNARP.
-- Actualizar estado por titulo.
-- Eliminar titulo.
+- Registrar un nuevo titulo.
+- Listar los titulos guardados.
+- Buscar un titulo SUNARP.
+- Actualizar el estado de un titulo.
+- Eliminar un registro cuando corresponde.
 - Ver estadisticas por estado.
-- Generar reporte por bloque.
-- Exportar CSV desde SQL.
-- Validar partida como control interno SQL.
-- Ver historial de cambios.
+- Revisar el avance por bloque.
+- Exportar resultados a CSV.
+- Consultar partida como dato interno de control.
+- Revisar el historial de cambios.
 
 ## Base de datos
 
-Los scripts SQL estan en la carpeta `sql/`:
+Los archivos de base de datos se encuentran en `sql/`:
 
-- `01_schema.sql`: crea tablas, vistas e indices.
+- `01_schema.sql`: crea la estructura principal.
 - `02_seed_demo.sql`: carga registros de demostracion.
-- `03_consultas_reportes.sql`: consultas de reporte.
-- `04_migracion_partida_en_base.sql`: migracion para conservar partida como control interno.
+- `03_consultas_reportes.sql`: contiene consultas para reportes.
+- `04_migracion_partida_en_base.sql`: agrega el manejo de partida como dato interno.
 
 ## Pruebas
 
-La matriz de 10 pruebas esta documentada en:
+La matriz de pruebas esta en:
 
 ```text
 docs/MATRIZ_PRUEBAS_10_CASOS.txt
@@ -86,7 +90,7 @@ Las pruebas automatizadas estan en:
 tests/test_integracion_sql.py
 ```
 
-## Autores
+## Integrantes
 
 - Marlon Correa
 - Luis Melendez Bao

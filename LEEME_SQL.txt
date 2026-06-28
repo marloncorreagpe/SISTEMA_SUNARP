@@ -4,7 +4,9 @@
 
 Este proyecto es una version academica del seguimiento de titulos
 registrales SUNARP. No depende de sistemas privados externos para ser
-presentado: usa Python, MySQL/MariaDB y una consola con menu.
+presentado: usa Python, SQL como base del modelo de datos y una consola
+con menu. Para la prueba local se uso MySQL/MariaDB desde XAMPP; en el
+informe se toma SQL 2022 como referencia academica de base de datos.
 
 OBJETIVO
 --------
@@ -80,18 +82,6 @@ Tambien se puede configurar con variables de entorno:
   SUNARP_DB_USER
   SUNARP_DB_PASSWORD
   SUNARP_DB_NAME
-
-PUNTOS PARA SUSTENTACION
-------------------------
-- El negocio necesita controlar lotes de titulos registrales.
-- El problema manual genera demora, errores y falta de avance por bloque.
-- La solucion guarda los datos en SQL para tener persistencia real.
-- El programa aplica CRUD: crear, leer, actualizar y eliminar registros.
-- Los reportes usan consultas SQL agrupadas por estado y bloque.
-- La clave operativa es item/codigo; oficio es dato de negocio; titulo es
-  el dato consultado para seguimiento SUNARP.
-- La partida se guarda e indexa en SQL como dato de control interno; no se usa
-  como criterio de consulta SUNARP.
 
 IMPORTAR RESULTADOS DESDE CSV
 -----------------------------

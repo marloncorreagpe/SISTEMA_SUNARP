@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Genera una evidencia tecnica reproducible para sustentacion."""
+"""Genera una evidencia tecnica reproducible del funcionamiento."""
 
 from datetime import datetime
 from pathlib import Path

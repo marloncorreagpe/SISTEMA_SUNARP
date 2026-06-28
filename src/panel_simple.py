@@ -244,7 +244,7 @@ def mostrar_menu():
     print("  5. Abrir menu CRUD del sistema")
     print("  6. Importar resultados_full.csv a SQL")
     print("  7. Ejecutar pruebas automaticas")
-    print("  8. Generar evidencia tecnica para sustentacion")
+    print("  8. Generar evidencia tecnica")
     print("  9. Abrir phpMyAdmin")
     print("  10. Abrir formularios graficos (CREATE/READ/UPDATE)")
     print("  0. Salir")

@@ -6,7 +6,7 @@ Registro de brechas (fecha | brecha | accion | resultado)
 2026-06-24 | Persistencia real de datos | Migrar el modelo a MySQL/MariaDB con tablas, relaciones e indices | El proyecto usa SQL real y puede revisarse en phpMyAdmin.
 2026-06-24 | Diferenciar titulo y partida | Ajustar menu, repositorio e importador para consultar por titulo y conservar partida como control SQL | La regla operativa queda correcta: SUNARP se consulta por titulo.
 2026-06-24 | Validacion robusta | Agregar validacion de opcion, rango, fecha, DNI/RUC, oficina y titulo numerico | El programa reintenta entradas invalidas sin terminar.
-2026-06-25 | Evidencia reproducible | Crear demo_profesor.py y evidencia_demo_profesor.txt | La sustentacion puede demostrar CRUD, historial y limpieza temporal.
+2026-06-25 | Evidencia reproducible | Crear demo_profesor.py y evidencia_demo_profesor.txt | La prueba muestra CRUD, historial y limpieza temporal.
 2026-06-26 | Pruebas automatizadas | Ampliar unittest a busqueda, partida, historial, importacion, exportacion, evidencia y formularios | Hay 8 pruebas automaticas verdes y una matriz manual de 10 casos.
 2026-06-26 | Interfaz para el usuario final | Construir 3 formularios graficos (CREATE/READ/UPDATE) en Tkinter sobre la misma base SQL | El sistema deja de ser solo consola; se opera por formularios.
 

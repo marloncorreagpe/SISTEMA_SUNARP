@@ -82,6 +82,6 @@ Valor para el negocio
 
 Nota de privacidad
 ------------------
-La sustentacion debe describir este proyecto como un sistema academico propio de
+La presentacion del proyecto debe describirlo como un sistema academico propio de
 seguimiento SUNARP con SQL. No es necesario mencionar herramientas internas ni
 otros productos personales.
