@@ -2,7 +2,7 @@
 """Formularios graficos (Tkinter) para el sistema SUNARP SQL.
 
 Incluye los tres formularios exigidos por la rubrica, todos conectados a la
-misma base MySQL/MariaDB y reutilizando la logica de TituloRepository:
+misma base SQL y reutilizando la logica de TituloRepository:
 
   1. Formulario de Registro de Titulo        (CREATE)
   2. Formulario de Consulta y Seguimiento     (READ + diferenciacion de estado)
@@ -15,7 +15,7 @@ La partida se conserva como dato interno de control en SQL.
 import tkinter as tk
 from tkinter import ttk, messagebox
 
-from config import ESTADOS_VALIDOS, OFICINAS_VALIDAS
+from config import DB_ENGINE, ESTADOS_VALIDOS, OFICINAS_VALIDAS
 from database import get_connection
 from repository import TituloRepository
 
@@ -42,15 +42,21 @@ def operar(accion):
     """Ejecuta una accion con una conexion fresca y la cierra siempre.
 
     Devuelve (ok, resultado_o_error). Evita conexiones colgadas durante la demo
-    y muestra un mensaje claro si MySQL/MariaDB no esta disponible.
+    y muestra un mensaje claro si la base SQL no esta disponible.
     """
     try:
         connection = get_connection()
     except Exception as exc:  # noqa: BLE001
+        motor = "SQL Server 2022" if DB_ENGINE == "mssql" else "MySQL/MariaDB"
+        detalle = (
+            "Verifique que SQL Server este iniciado y que la base demo este cargada."
+            if DB_ENGINE == "mssql"
+            else "Verifique que XAMPP este iniciado y que la base demo este cargada."
+        )
         messagebox.showerror(
             "Sin conexion a la base",
-            "No se pudo conectar a MySQL/MariaDB.\n\n"
-            "Verifique que XAMPP este iniciado y que la base demo este cargada.\n\n"
+            f"No se pudo conectar a {motor}.\n\n"
+            f"{detalle}\n\n"
             f"Detalle: {exc}",
         )
         return False, exc

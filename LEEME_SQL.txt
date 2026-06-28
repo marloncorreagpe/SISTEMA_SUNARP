@@ -4,9 +4,9 @@
 
 Este proyecto es una version academica del seguimiento de titulos
 registrales SUNARP. No depende de sistemas privados externos para ser
-presentado: usa Python, SQL como base del modelo de datos y una consola
-con menu. Para la prueba local se uso MySQL/MariaDB desde XAMPP; en el
-informe se toma SQL 2022 como referencia academica de base de datos.
+presentado: usa Python, SQL como base del modelo de datos, menu de consola
+y formularios graficos. La ruta recomendada para revision es SQL Server
+2022; tambien se deja una ruta alternativa con MySQL/MariaDB desde XAMPP.
 
 OBJETIVO
 --------
@@ -26,14 +26,20 @@ ARQUITECTURA
 3. Operaciones CRUD y reportes:
    src/repository.py
 
-4. Base de datos:
+4. Base de datos SQL Server 2022:
+   sql_sqlserver/01_schema_sqlserver_2022.sql
+   sql_sqlserver/02_seed_demo_sqlserver_2022.sql
+
+5. Base de datos alternativa MySQL/MariaDB:
    sql/01_schema.sql
    sql/02_seed_demo.sql
    sql/04_migracion_partida_en_base.sql
 
 INSTALACION
 -----------
-1. Instalar XAMPP y activar MySQL/MariaDB.
+OPCION A - SQL SERVER 2022
+
+1. Instalar SQL Server 2022, ODBC Driver 18 for SQL Server y sqlcmd.
 
 2. Instalar driver de Python:
    pip install -r requirements.txt
@@ -41,7 +47,20 @@ INSTALACION
    Tambien puede ejecutar:
    INSTALAR_DEPENDENCIAS.bat
 
-3. Crear la base y cargar datos demo desde phpMyAdmin o terminal:
+3. Cargar base y datos demo:
+   CARGAR_SQLSERVER_2022.bat
+
+4. Abrir formularios:
+   FORMULARIOS_SQLSERVER_2022.bat
+
+5. Abrir menu de consola:
+   EJECUTAR_MENU_SQLSERVER_2022.bat
+
+OPCION B - MYSQL/MARIADB CON XAMPP
+
+1. Instalar XAMPP y activar MySQL/MariaDB.
+
+2. Crear la base y cargar datos demo desde phpMyAdmin o terminal:
    sql/01_schema.sql
    sql/04_migracion_partida_en_base.sql
    sql/02_seed_demo.sql
@@ -49,27 +68,26 @@ INSTALACION
    Si XAMPP esta instalado en C:\xampp, tambien puede ejecutar:
    CARGAR_BASE_DATOS.bat
 
-4. Ejecutar:
+3. Ejecutar:
    python src/main.py
 
    Tambien puede ejecutar:
    EJECUTAR_MENU.bat
 
-   Para una guia paso a paso de preparacion, pruebas e importacion:
-   USO_SIMPLE.bat
-
-5. Para abrir phpMyAdmin:
+4. Para abrir phpMyAdmin:
    ABRIR_PHPMYADMIN.bat
 
-6. Para generar una evidencia tecnica reproducible:
+5. Para generar una evidencia tecnica reproducible:
    python src/demo_profesor.py
-
-   Tambien esta disponible desde:
-   USO_SIMPLE.bat -> opcion 8
 
 CONFIGURACION OPCIONAL
 ----------------------
 Por defecto se conecta a:
+  motor: mssql
+  servidor SQL Server: localhost\SQLEXPRESS
+
+Para la opcion alternativa MySQL/MariaDB:
+  motor: mysql
   host: 127.0.0.1
   puerto: 3306
   usuario: root
@@ -77,11 +95,13 @@ Por defecto se conecta a:
   base: sunarp_academico
 
 Tambien se puede configurar con variables de entorno:
+  SUNARP_DB_ENGINE=mysql o mssql
   SUNARP_DB_HOST
   SUNARP_DB_PORT
   SUNARP_DB_USER
   SUNARP_DB_PASSWORD
   SUNARP_DB_NAME
+  SUNARP_SQLSERVER
 
 IMPORTAR RESULTADOS DESDE CSV
 -----------------------------
@@ -91,8 +111,9 @@ Si se tiene un archivo resultados_full.csv, se puede traspasar a SQL con:
 
 ESTADO DE PRUEBA LOCAL
 ----------------------
-La base fue probada con MariaDB 10.4.32 de XAMPP. Se cargaron 50 titulos demo,
-se verificaron las vistas de resumen y se ejecuto el menu con busqueda,
-estadisticas, reporte por bloque y exportacion CSV.
+La base incluye scripts para SQL Server 2022 y una alternativa probada con
+MariaDB 10.4.32 de XAMPP. Se cargaron 50 titulos demo, se verificaron las
+vistas de resumen y se ejecuto el menu con busqueda, estadisticas, reporte por
+bloque y exportacion CSV.
 Tambien se agregaron pruebas automaticas en tests/test_integracion_sql.py.
 La evidencia tecnica se genera en salidas/evidencia_demo_profesor.txt.

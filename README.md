@@ -10,8 +10,8 @@ Por eso se desarrollo un sistema en Python que permite llevar el control de los 
 
 - Curso: Fundamentos de Programacion - CIIN1205P
 - Lenguaje usado: Python
-- Base de datos: SQL 2022 como referencia academica del proyecto
-- Ejecucion local probada: MySQL/MariaDB con XAMPP
+- Base de datos recomendada para revision: SQL Server 2022
+- Ejecucion alternativa: MySQL/MariaDB con XAMPP
 - Interfaz: menu en consola y formularios en Tkinter
 
 ## Carpetas principales
@@ -19,12 +19,58 @@ Por eso se desarrollo un sistema en Python que permite llevar el control de los 
 ```text
 src/        Codigo fuente del sistema
 sql/        Scripts para crear y cargar la base de datos
+sql_sqlserver/ Scripts listos para SQL Server 2022
 tests/      Pruebas automatizadas
 docs/       Documentacion tecnica del proyecto
 salidas/    Evidencias y archivos generados
 ```
 
-## Como ejecutar
+## Ejecucion recomendada con SQL Server 2022
+
+Esta es la ruta pensada para que el proyecto pueda revisarse en una PC con Visual Studio y SQL Server 2022.
+
+1. Instalar lo necesario:
+
+- Python 3.10 o superior.
+- Visual Studio 2022 con soporte para Python.
+- SQL Server 2022, por ejemplo la instancia `localhost\SQLEXPRESS`.
+- ODBC Driver 18 for SQL Server.
+- Microsoft Command Line Utilities for SQL Server, para tener el comando `sqlcmd`.
+
+2. Instalar dependencias de Python desde la carpeta del proyecto.
+
+```bash
+pip install -r requirements.txt
+```
+
+3. Cargar la base demo en SQL Server 2022.
+
+```bat
+CARGAR_SQLSERVER_2022.bat
+```
+
+Si la instancia tiene otro nombre, se puede indicar asi:
+
+```bat
+CARGAR_SQLSERVER_2022.bat localhost\SQLEXPRESS
+```
+
+4. Abrir los formularios conectados a SQL Server 2022.
+
+```bat
+FORMULARIOS_SQLSERVER_2022.bat
+```
+
+5. Si se prefiere usar el menu de consola:
+
+```bat
+EJECUTAR_MENU_SQLSERVER_2022.bat
+```
+
+En Visual Studio tambien se puede abrir `sistema.sln`. El archivo de inicio configurado es `src\formularios.py`.
+Por defecto el proyecto apunta a SQL Server 2022 con la instancia `localhost\SQLEXPRESS`.
+
+## Ejecucion alternativa con XAMPP
 
 1. Instalar las dependencias de Python.
 
@@ -32,9 +78,9 @@ salidas/    Evidencias y archivos generados
 pip install -r requirements.txt
 ```
 
-2. Iniciar el servicio de base de datos.
+2. Iniciar MySQL/MariaDB desde XAMPP.
 
-Para la prueba local se uso XAMPP con MySQL/MariaDB. Los scripts SQL estan en la carpeta `sql/`.
+Los scripts SQL para esta opcion estan en la carpeta `sql/`.
 
 3. Cargar la base de datos.
 
@@ -69,7 +115,12 @@ FORMULARIOS.bat
 
 ## Base de datos
 
-Los archivos de base de datos se encuentran en `sql/`:
+Para SQL Server 2022 se debe usar la carpeta `sql_sqlserver/`:
+
+- `01_schema_sqlserver_2022.sql`: crea la base, tablas, indices y vistas.
+- `02_seed_demo_sqlserver_2022.sql`: carga los 50 registros de demostracion.
+
+Para MySQL/MariaDB se debe usar la carpeta `sql/`:
 
 - `01_schema.sql`: crea la estructura principal.
 - `02_seed_demo.sql`: carga registros de demostracion.
@@ -95,4 +146,3 @@ tests/test_integracion_sql.py
 - Marlon Correa
 - Luis Melendez Bao
 - Gianluca Renato Hurtado Malca
-

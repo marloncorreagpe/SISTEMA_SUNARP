@@ -4,7 +4,15 @@
 import csv
 from pathlib import Path
 
-from mysql.connector import IntegrityError
+try:
+    from mysql.connector import IntegrityError as MySqlIntegrityError
+except Exception:  # noqa: BLE001
+    MySqlIntegrityError = type("MySqlIntegrityError", (Exception,), {})
+
+try:
+    import pyodbc
+except Exception:  # noqa: BLE001
+    pyodbc = None
 
 
 EXPORT_FIELDS = [
@@ -27,26 +35,62 @@ EXPORT_FIELDS = [
 class TituloRepository:
     def __init__(self, connection):
         self.connection = connection
+        self.engine = getattr(connection, "engine", "mysql")
+
+    def _ph(self):
+        return "?" if self.engine == "mssql" else "%s"
+
+    def _cursor_dict(self):
+        if self.engine == "mssql":
+            return self.connection.cursor()
+        return self.connection.cursor(dictionary=True)
+
+    def _fetchall_dict(self, cursor):
+        if self.engine != "mssql":
+            return cursor.fetchall()
+        columns = [col[0] for col in cursor.description]
+        return [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+    def _integrity_errors(self):
+        errors = [MySqlIntegrityError]
+        if pyodbc is not None:
+            errors.append(pyodbc.IntegrityError)
+        return tuple(errors)
 
     def registrar(self, data):
-        sql = """
-            INSERT INTO titulos_registrales
-            (item, bloque, oficina, anio_consulta, oficio, titulo, nombre,
-             dni_ruc, partida, estado_sunarp, fecha_presentacion,
-             fecha_vencimiento, pdf_descargado)
-            VALUES
-            (%(item)s, %(bloque)s, %(oficina)s, %(anio_consulta)s,
-             %(oficio)s, %(titulo)s, %(nombre)s, %(dni_ruc)s, %(partida)s,
-             %(estado_sunarp)s, %(fecha_presentacion)s,
-             %(fecha_vencimiento)s, %(pdf_descargado)s)
-        """
+        fields = (
+            "item", "bloque", "oficina", "anio_consulta", "oficio", "titulo",
+            "nombre", "dni_ruc", "partida", "estado_sunarp",
+            "fecha_presentacion", "fecha_vencimiento", "pdf_descargado",
+        )
+        if self.engine == "mssql":
+            placeholders = ", ".join("?" for _ in fields)
+            sql = f"""
+                INSERT INTO titulos_registrales
+                ({", ".join(fields)})
+                VALUES ({placeholders})
+            """
+            params = tuple(data[field] for field in fields)
+        else:
+            sql = """
+                INSERT INTO titulos_registrales
+                (item, bloque, oficina, anio_consulta, oficio, titulo, nombre,
+                 dni_ruc, partida, estado_sunarp, fecha_presentacion,
+                 fecha_vencimiento, pdf_descargado)
+                VALUES
+                (%(item)s, %(bloque)s, %(oficina)s, %(anio_consulta)s,
+                 %(oficio)s, %(titulo)s, %(nombre)s, %(dni_ruc)s, %(partida)s,
+                 %(estado_sunarp)s, %(fecha_presentacion)s,
+                 %(fecha_vencimiento)s, %(pdf_descargado)s)
+            """
+            params = data
         try:
             cursor = self.connection.cursor()
-            cursor.execute(sql, data)
+            cursor.execute(sql, params)
             cursor.close()
             self.connection.commit()
             return True, "Titulo registrado correctamente."
-        except IntegrityError:
+        except self._integrity_errors():
             self.connection.rollback()
             return False, "Ese numero de titulo ya existe en la base de datos."
 
@@ -58,9 +102,9 @@ class TituloRepository:
             FROM titulos_registrales
             ORDER BY item
         """
-        cursor = self.connection.cursor(dictionary=True)
+        cursor = self._cursor_dict()
         cursor.execute(sql)
-        rows = cursor.fetchall()
+        rows = self._fetchall_dict(cursor)
         cursor.close()
         return rows
 
@@ -75,20 +119,20 @@ class TituloRepository:
             WHERE {where_sql}
             ORDER BY item
         """
-        cursor = self.connection.cursor(dictionary=True)
+        cursor = self._cursor_dict()
         cursor.execute(sql, params)
-        rows = cursor.fetchall()
+        rows = self._fetchall_dict(cursor)
         cursor.close()
         return rows
 
     def buscar_por_titulo(self, titulo):
-        rows = self._buscar_detalle("titulo = %s", (titulo,))
+        rows = self._buscar_detalle(f"titulo = {self._ph()}", (titulo,))
         return rows[0] if rows else None
 
     def buscar_por_partida(self, partida):
         """Busqueda interna SQL; no representa una consulta en SUNARP."""
         return self._buscar_detalle(
-            "(partida = %s OR partida_web = %s)",
+            f"(partida = {self._ph()} OR partida_web = {self._ph()})",
             (partida, partida),
         )
 
@@ -99,18 +143,19 @@ class TituloRepository:
 
         sql_update = """
             UPDATE titulos_registrales
-            SET estado_sunarp = %s, error = NULL
-            WHERE id = %s
+            SET estado_sunarp = {ph}, error = NULL
+            WHERE id = {ph}
         """
         sql_hist = """
             INSERT INTO historial_estados
             (titulo_id, estado_anterior, estado_nuevo, observacion)
-            VALUES (%s, %s, %s, %s)
+            VALUES ({ph}, {ph}, {ph}, {ph})
         """
+        ph = self._ph()
         cursor = self.connection.cursor()
-        cursor.execute(sql_update, (nuevo_estado, actual["id"]))
+        cursor.execute(sql_update.format(ph=ph), (nuevo_estado, actual["id"]))
         cursor.execute(
-            sql_hist,
+            sql_hist.format(ph=ph),
             (actual["id"], actual["estado_sunarp"], nuevo_estado, observacion),
         )
         cursor.close()
@@ -119,7 +164,7 @@ class TituloRepository:
 
     def eliminar(self, titulo):
         cursor = self.connection.cursor()
-        cursor.execute("DELETE FROM titulos_registrales WHERE titulo = %s", (titulo,))
+        cursor.execute(f"DELETE FROM titulos_registrales WHERE titulo = {self._ph()}", (titulo,))
         filas = cursor.rowcount
         cursor.close()
         self.connection.commit()
@@ -133,9 +178,9 @@ class TituloRepository:
             FROM vw_resumen_estado
             ORDER BY cantidad DESC, estado_sunarp
         """
-        cursor = self.connection.cursor(dictionary=True)
+        cursor = self._cursor_dict()
         cursor.execute(sql)
-        rows = cursor.fetchall()
+        rows = self._fetchall_dict(cursor)
         cursor.close()
         return rows
 
@@ -145,9 +190,9 @@ class TituloRepository:
             FROM vw_avance_bloque
             ORDER BY bloque
         """
-        cursor = self.connection.cursor(dictionary=True)
+        cursor = self._cursor_dict()
         cursor.execute(sql)
-        rows = cursor.fetchall()
+        rows = self._fetchall_dict(cursor)
         cursor.close()
         return rows
 
@@ -160,12 +205,12 @@ class TituloRepository:
             SELECT h.estado_anterior, h.estado_nuevo, h.observacion,
                    h.fecha_cambio
             FROM historial_estados h
-            WHERE h.titulo_id = %s
+            WHERE h.titulo_id = {ph}
             ORDER BY h.fecha_cambio DESC, h.id DESC
         """
-        cursor = self.connection.cursor(dictionary=True)
-        cursor.execute(sql, (actual["id"],))
-        rows = cursor.fetchall()
+        cursor = self._cursor_dict()
+        cursor.execute(sql.format(ph=self._ph()), (actual["id"],))
+        rows = self._fetchall_dict(cursor)
         cursor.close()
         return rows
 
