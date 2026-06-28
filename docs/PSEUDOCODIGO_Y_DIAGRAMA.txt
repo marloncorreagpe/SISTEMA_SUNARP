@@ -1,0 +1,136 @@
+PSEUDOCODIGO Y DIAGRAMA DE FLUJO - SUNARP SQL
+=============================================
+
+Diagrama de flujo general
+-------------------------
+El diagrama de flujo con simbologia estandar (inicio/fin, proceso, decision,
+entrada/salida y subrutina) y la correspondencia 1:1 opcion -> funcion esta en
+la imagen DIAGRAMA_FLUJO.png de esta misma carpeta. Cubre las 10 opciones del
+menu principal. A continuacion se incluye su version en texto (Mermaid) como
+respaldo reproducible:
+
+flowchart TD
+    A[Inicio] --> B[Conectar a MySQL/MariaDB]
+    B --> C{Conexion correcta}
+    C -- No --> D[Mostrar error y terminar]
+    C -- Si --> E[Mostrar menu principal]
+    E --> F{Opcion seleccionada}
+    F -- 1 Registrar --> G[Validar datos e insertar titulo]
+    F -- 2 Listar --> H[Consultar titulos ordenados por item]
+    F -- 3 Buscar titulo --> I[Buscar por numero de titulo SUNARP]
+    F -- 4 Actualizar --> J[Actualizar estado y guardar historial]
+    F -- 5 Eliminar --> K[Confirmar y eliminar por titulo]
+    F -- 6 Estadisticas --> L[Consultar vista resumen por estado]
+    F -- 7 Reporte bloque --> M[Consultar vista avance por bloque]
+    F -- 8 Exportar --> N[Escribir CSV desde SQL]
+    F -- 9 Partida SQL --> O[Buscar partida solo en base de datos]
+    F -- 10 Historial --> P[Mostrar cambios del titulo]
+    F -- 0 Salir --> Q[Cerrar conexion]
+    G --> R[Pausar]
+    H --> R
+    I --> R
+    J --> R
+    K --> R
+    L --> R
+    M --> R
+    N --> R
+    O --> R
+    P --> R
+    R --> E
+    Q --> S[Fin]
+
+Pseudocodigo principal
+----------------------
+01 INICIO
+02   cargar configuracion de base de datos
+03   intentar abrir conexion SQL
+04   SI conexion falla ENTONCES
+05       mostrar mensaje de error
+06       terminar programa
+07   FIN SI
+08   crear repositorio con la conexion
+09   opcion <- -1
+10   MIENTRAS opcion <> 0 HACER
+11       mostrar titulo del sistema
+12       mostrar opcion 1 registrar titulo
+13       mostrar opcion 2 listar titulos
+14       mostrar opcion 3 buscar titulo SUNARP
+15       mostrar opcion 4 actualizar estado por titulo
+16       mostrar opcion 5 eliminar titulo
+17       mostrar opcion 6 estadisticas por estado
+18       mostrar opcion 7 reporte por bloque
+19       mostrar opcion 8 exportar CSV
+20       mostrar opcion 9 validar partida en SQL
+21       mostrar opcion 10 ver historial
+22       mostrar opcion 0 salir
+23       opcion <- leer entero entre 0 y 10
+24       SI opcion = 1 ENTONCES registrar_titulo()
+25       SI opcion = 2 ENTONCES listar_titulos()
+26       SI opcion = 3 ENTONCES buscar_titulo()
+27       SI opcion = 4 ENTONCES actualizar_estado()
+28       SI opcion = 5 ENTONCES eliminar_titulo()
+29       SI opcion = 6 ENTONCES mostrar_estadisticas()
+30       SI opcion = 7 ENTONCES reporte_por_bloque()
+31       SI opcion = 8 ENTONCES exportar_csv()
+32       SI opcion = 9 ENTONCES buscar_partida_interna()
+33       SI opcion = 10 ENTONCES ver_historial()
+34       SI opcion <> 0 ENTONCES pausar()
+35   FIN MIENTRAS
+36   cerrar conexion SQL
+37 FIN
+
+Pseudocodigo de registrar_titulo
+--------------------------------
+38 PROCEDIMIENTO registrar_titulo()
+39   item <- leer entero mayor o igual a 1
+40   bloque <- leer entero entre 1 y 99 y completar con cero
+41   oficina <- seleccionar desde lista de oficinas validas
+42   anio <- leer entero entre 2000 y 2100
+43   oficio <- leer texto no vacio
+44   titulo <- leer texto numerico no vacio
+45   nombre <- leer texto no vacio
+46   dni_ruc <- leer numero de 8 u 11 digitos
+47   partida <- leer texto opcional
+48   estado <- seleccionar estado valido
+49   fecha_presentacion <- leer fecha opcional
+50   fecha_vencimiento <- leer fecha opcional
+51   ejecutar INSERT en titulos_registrales
+52   SI titulo duplicado ENTONCES mostrar advertencia
+53   SI insercion correcta ENTONCES confirmar registro
+54 FIN PROCEDIMIENTO
+
+Pseudocodigo de actualizar_estado
+---------------------------------
+55 PROCEDIMIENTO actualizar_estado()
+56   titulo <- leer titulo numerico
+57   actual <- buscar titulo en SQL
+58   SI actual no existe ENTONCES
+59       mostrar "No existe un titulo con ese numero"
+60       retornar
+61   FIN SI
+62   nuevo_estado <- seleccionar estado valido
+63   observacion <- leer texto opcional
+64   actualizar estado_sunarp del titulo
+65   insertar fila en historial_estados
+66   confirmar actualizacion
+67 FIN PROCEDIMIENTO
+
+Pseudocodigo de exportar_csv
+----------------------------
+68 PROCEDIMIENTO exportar_csv()
+69   consultar todos los titulos ordenados por item
+70   crear carpeta salidas si no existe
+71   abrir archivo resultados_seguimiento_sql.csv
+72   escribir encabezados
+73   POR CADA fila HACER
+74       escribir datos del titulo en CSV
+75   FIN PARA
+76   cerrar archivo
+77   mostrar ruta generada
+78 FIN PROCEDIMIENTO
+
+Correspondencia
+---------------
+Cada opcion del menu tiene una funcion equivalente en src/main.py y una operacion
+SQL encapsulada en src/repository.py. Esto mantiene relacion directa entre
+diagrama, pseudocodigo y codigo fuente.

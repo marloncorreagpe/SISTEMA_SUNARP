@@ -1,0 +1,57 @@
+CHECKLIST DE CUMPLIMIENTO AVANZADO - SUNARP SQL
+===============================================
+
+Problema con enfoque de ingenieria
+----------------------------------
+[OK] Ishikawa incluido en PPT y pseudocodigo/diagrama.
+[OK] Causas raiz: metodo manual, datos, tiempo, control, tecnologia.
+[OK] Alcance: seguimiento academico de titulos registrales.
+[OK] Supuesto critico: SUNARP se consulta por titulo; partida es control SQL.
+[OK] Impacto cuantificado con 50 registros demo, 10 pruebas y reportes SQL.
+[OK] Estimacion de impacto (tiempo/errores) con supuestos en docs/ESTIMACION_IMPACTO.txt.
+
+Alternativas y trazabilidad
+---------------------------
+[OK] Alternativa A: Excel/manual.
+[OK] Alternativa B: Python + CSV.
+[OK] Alternativa C: Python + MySQL/MariaDB.
+[OK] Decision justificada por mantenibilidad, datos, riesgo y trazabilidad.
+[OK] Matriz Req -> Menu/Funcion -> Prueba en docs/MATRIZ_TRAZABILIDAD.txt.
+
+Programa ejecutable
+-------------------
+[OK] Menu principal con 10 opciones.
+[OK] Mas de 5 funciones cohesionadas.
+[OK] Uso de listas/cadenas/validaciones.
+[OK] Persistencia SQL real con MySQL/MariaDB.
+[OK] 50 registros simulados en sql/02_seed_demo.sql.
+[OK] Validacion robusta con mensaje y reintento.
+[OK] 3 formularios graficos (CREATE/READ/UPDATE) en src/formularios.py.
+
+Pruebas
+-------
+[OK] 10 casos documentados: 6 normales, 2 limite, 2 invalidas.
+[OK] 8 pruebas automaticas con unittest (incluye formularios graficos).
+[OK] Evidencia tecnica generada por src/demo_profesor.py.
+[OK] Correccion iterativa (3 fallos antes/despues) en docs/MATRIZ_PRUEBAS_10_CASOS.txt.
+
+Autoaprendizaje e incorporacion de mejoras
+------------------------------------------
+[OK] Brechas identificadas y priorizadas (criticas vs secundarias).
+[OK] Antes/despues documentado.
+[OK] Links/fuentes de autoaprendizaje en la bitacora.
+[OK] Nuevos elementos: SQL, validaciones, modularidad, importador, formularios, evidencia.
+
+Diagrama y pseudocodigo
+-----------------------
+[OK] Diagrama de flujo VISUAL con simbologia estandar en docs/DIAGRAMA_FLUJO.png.
+[OK] Version Mermaid de respaldo en docs/PSEUDOCODIGO_Y_DIAGRAMA.txt.
+[OK] Pseudocodigo con 78 lineas, cubre las 10 opciones del menu.
+[OK] Correspondencia directa 1:1 menu -> funcion -> SQL.
+
+Entrega
+-------
+[OK] Carpeta ordenada por codigo, SQL, documentacion, pruebas, PPT y ZIP.
+[OK] ZIP interno del codigo fuente.
+[OK] Presentacion alineada a la rubrica.
+[OK] Informe final actualizado.

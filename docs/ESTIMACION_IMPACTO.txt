@@ -1,0 +1,51 @@
+ESTIMACION DE IMPACTO DEL PROBLEMA (con supuestos declarados)
+============================================================
+
+Proposito
+---------
+Cuantificar el impacto del seguimiento manual de titulos registrales para
+justificar la automatizacion. Como es un proyecto academico, las cifras son
+una ESTIMACION basada en supuestos explicitos sobre el proceso manual, no
+mediciones de campo. Los supuestos se declaran para que el calculo sea
+verificable y reproducible.
+
+Supuestos del proceso manual
+----------------------------
+S1. Lote de trabajo de referencia: 50 titulos (igual que la base demo).
+S2. Consulta manual por titulo en la web + copiado de datos a una hoja:
+    3 a 5 minutos por titulo (supuesto: 4 min promedio).
+S3. Re-consulta por falta de historial: ~30% de los titulos se vuelven a
+    revisar al menos una vez (supuesto: 0.3 re-consultas por titulo).
+S4. Errores por copiado manual o por confundir titulo con partida:
+    ~6% de los registros (supuesto: 3 de cada 50).
+
+Estimacion (proceso manual, por lote de 50)
+-------------------------------------------
+Tiempo de consulta inicial:  50 x 4 min                = 200 min
+Tiempo por re-consultas:     50 x 0.3 x 4 min          =  60 min
+                                                         --------
+Tiempo total estimado por lote                          = 260 min (~4.3 h)
+Errores esperados por lote:  50 x 6%                    = 3 registros
+
+Estimacion (con el sistema, por lote de 50)
+-------------------------------------------
+Consulta por numero de titulo en SQL                   = inmediata
+Reportes por estado y por bloque (vistas SQL)          = inmediatos
+Re-consultas: el historial evita repetir trabajo       ~ 0
+Errores de confusion titulo/partida                    = 0 (regla del dominio
+                                                          + validaciones)
+Carga del lote: 50 registros en sql/02_seed_demo.sql   = una sola operacion
+
+Impacto esperado
+----------------
+- Tiempo: de ~4.3 horas de trabajo manual por lote a una consulta inmediata.
+- Errores: de 3 registros con riesgo por lote a 0 por validacion y regla
+  titulo/partida.
+- Trazabilidad: de 0 historial a registro de cada cambio de estado.
+
+Como verificar la estimacion
+----------------------------
+Los parametros (4 min/titulo, 30% re-consulta, 6% error) son supuestos y se
+pueden ajustar. El beneficio del sistema (consulta inmediata, 0 re-consultas,
+0 errores de confusion, trazabilidad) es verificable hoy con las 8 pruebas
+automaticas, la evidencia tecnica y los 50 registros cargados.

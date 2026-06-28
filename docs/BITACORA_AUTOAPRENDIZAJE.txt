@@ -1,0 +1,58 @@
+BITACORA DE AUTOAPRENDIZAJE Y MEJORAS
+=====================================
+
+Registro de brechas (fecha | brecha | accion | resultado)
+---------------------------------------------------------
+2026-06-24 | Persistencia real de datos | Migrar el modelo a MySQL/MariaDB con tablas, relaciones e indices | El proyecto usa SQL real y puede revisarse en phpMyAdmin.
+2026-06-24 | Diferenciar titulo y partida | Ajustar menu, repositorio e importador para consultar por titulo y conservar partida como control SQL | La regla operativa queda correcta: SUNARP se consulta por titulo.
+2026-06-24 | Validacion robusta | Agregar validacion de opcion, rango, fecha, DNI/RUC, oficina y titulo numerico | El programa reintenta entradas invalidas sin terminar.
+2026-06-25 | Evidencia reproducible | Crear demo_profesor.py y evidencia_demo_profesor.txt | La sustentacion puede demostrar CRUD, historial y limpieza temporal.
+2026-06-26 | Pruebas automatizadas | Ampliar unittest a busqueda, partida, historial, importacion, exportacion, evidencia y formularios | Hay 8 pruebas automaticas verdes y una matriz manual de 10 casos.
+2026-06-26 | Interfaz para el usuario final | Construir 3 formularios graficos (CREATE/READ/UPDATE) en Tkinter sobre la misma base SQL | El sistema deja de ser solo consola; se opera por formularios.
+
+Priorizacion de brechas
+-----------------------
+CRITICAS (bloquean el objetivo del proyecto):
+  1. Persistencia real de datos (sin SQL no hay seguimiento confiable).
+  2. Diferenciar titulo y partida (es la regla del dominio; un error aqui invalida la consulta).
+  3. Validacion robusta (sin ella el programa se cae con datos reales).
+SECUNDARIAS (mejoran calidad y usabilidad, no bloquean):
+  4. Evidencia reproducible.
+  5. Pruebas automatizadas.
+  6. Formularios graficos e interfaz de usuario.
+
+Antes / Despues
+---------------
+Antes: el flujo dependia de ejecutar comandos separados y recordar rutas.
+Despues: USO_SIMPLE.bat centraliza preparacion, pruebas, importacion y evidencia.
+
+Antes: la partida podia confundirse como criterio de consulta.
+Despues: el menu indica "Validar partida en SQL (control interno)" y la busqueda SUNARP queda por titulo.
+
+Antes: el historial podia estar vacio en una base recien cargada.
+Despues: el seed demo deja una evidencia inicial de trazabilidad.
+
+Antes: el sistema solo se operaba por consola.
+Despues: 3 formularios graficos permiten registrar, consultar (con estado por color) y actualizar.
+
+Fuentes consultadas (links de autoaprendizaje)
+----------------------------------------------
+- Python - entrada y manejo de texto:        https://docs.python.org/3/library/functions.html#input
+- Python - modulo csv (leer/escribir):       https://docs.python.org/3/library/csv.html
+- Python - modulo datetime (fechas):         https://docs.python.org/3/library/datetime.html
+- Python - unittest (pruebas):               https://docs.python.org/3/library/unittest.html
+- Python - tkinter (formularios):            https://docs.python.org/3/library/tkinter.html
+- MySQL Connector/Python (conexion):         https://dev.mysql.com/doc/connector-python/en/
+- MySQL - vistas (CREATE VIEW):              https://dev.mysql.com/doc/refman/8.0/en/create-view.html
+- MySQL - indices (CREATE INDEX):            https://dev.mysql.com/doc/refman/8.0/en/create-index.html
+
+Aprendizajes aplicados (donde se usaron en el codigo)
+----------------------------------------------------
+1. Diseno modular: separar interfaz (main.py, formularios.py), conexion (database.py),
+   repositorio (repository.py), importacion (importar_resultados_csv.py) y demo (demo_profesor.py).
+2. SQL relacional: tablas, vistas (vw_resumen_estado, vw_avance_bloque), indices y llaves foraneas (sql/01_schema.sql).
+3. Calidad de software: pruebas automaticas (tests/test_integracion_sql.py) y matriz de 10 casos.
+4. Usabilidad: panel simple y formularios para revisar sin memorizar comandos.
+
+Nota: la correccion iterativa de fallos (antes/despues) esta documentada en
+docs/MATRIZ_PRUEBAS_10_CASOS.txt, seccion "Correccion iterativa".

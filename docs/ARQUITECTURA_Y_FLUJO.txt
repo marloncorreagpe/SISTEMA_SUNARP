@@ -1,0 +1,87 @@
+ARQUITECTURA Y FLUJO DEL PROYECTO SUNARP SQL
+============================================
+
+Idea central
+------------
+El proyecto representa un sistema academico para controlar el seguimiento de
+titulos registrales. La mejora principal frente a una version en memoria es que
+los datos se guardan en una base SQL real.
+
+Flujo de datos
+--------------
+1. El usuario registra o importa titulos.
+2. El sistema valida los datos importantes:
+   - item: identidad operativa interna.
+   - oficio: dato de negocio.
+   - titulo: numero usado para seguimiento SUNARP.
+   - partida: dato registral guardado en SQL para control interno.
+3. Los datos se guardan en la tabla titulos_registrales.
+4. Cada cambio de estado se registra tambien en historial_estados.
+5. Los reportes y validaciones internas se generan con SQL:
+   - resumen por estado;
+   - avance por bloque;
+   - validacion interna por partida;
+   - pendientes;
+   - historial.
+
+Capas del codigo
+----------------
+src/main.py
+  Muestra el menu y recibe entradas por teclado.
+
+src/database.py
+  Abre la conexion con MySQL/MariaDB.
+
+src/repository.py
+  Ejecuta INSERT, SELECT, UPDATE, DELETE y reportes.
+
+src/importar_resultados_csv.py
+  Permite traspasar resultados desde un CSV a la base SQL usando UPSERT.
+
+src/demo_profesor.py
+  Ejecuta una prueba controlada de lectura, creacion, actualizacion, historial
+  y eliminacion, y deja una evidencia en salidas/.
+
+sql/01_schema.sql
+  Crea la base, tablas, relaciones y vistas.
+
+sql/02_seed_demo.sql
+  Carga 50 registros academicos de prueba.
+
+sql/03_consultas_reportes.sql
+  Consultas SQL listas para demostrar en clase.
+
+sql/04_migracion_partida_en_base.sql
+  Ajusta bases ya creadas para conservar partidas e indexarlas.
+
+Como se escribe la base segun los datos obtenidos
+-------------------------------------------------
+Cuando el sistema obtiene o recibe un resultado, usa el numero de titulo como
+clave de actualizacion. Si el titulo no existe, lo inserta. Si ya existe, lo
+actualiza. Esa operacion se llama UPSERT.
+
+La partida no se usa como criterio de consulta SUNARP. Se conserva en la base
+SQL porque sirve para control, evidencia y validaciones internas.
+
+Ejemplo conceptual:
+
+INSERT INTO titulos_registrales (...)
+VALUES (...)
+ON DUPLICATE KEY UPDATE
+  estado_sunarp = VALUES(estado_sunarp),
+  fecha_presentacion = VALUES(fecha_presentacion),
+  pdf_descargado = VALUES(pdf_descargado);
+
+Valor para el negocio
+---------------------
+- Reduce transcripcion manual.
+- Evita duplicidad de titulos.
+- Permite saber cuantos titulos faltan por bloque.
+- Conserva historial de cambios.
+- Permite exportar resultados y auditar avances.
+
+Nota de privacidad
+------------------
+La sustentacion debe describir este proyecto como un sistema academico propio de
+seguimiento SUNARP con SQL. No es necesario mencionar herramientas internas ni
+otros productos personales.

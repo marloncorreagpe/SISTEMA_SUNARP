@@ -1,0 +1,67 @@
+MATRIZ DE TRAZABILIDAD - SUNARP SQL
+===================================
+
+Objetivo
+--------
+Relacionar cada requerimiento de la rubrica con una opcion del sistema, una
+funcion concreta del codigo y una prueba verificable.
+
+Req 1. Registrar titulos registrales
+Menu/flujo: main.py opcion 1 - Registrar nuevo titulo
+Funcion: registrar_titulo(), TituloRepository.registrar()
+Prueba: test_exportar_csv_incluye_partida y prueba manual P01
+Evidencia: validacion de item, bloque, oficina, titulo, DNI/RUC y estado.
+
+Req 2. Listar 50 registros simulados
+Menu/flujo: main.py opcion 2 - Listar titulos
+Funcion: listar_titulos(), TituloRepository.listar()
+Prueba: carga sql/02_seed_demo.sql con 50 registros
+Evidencia: salidas/evidencia_demo_profesor.txt total=50.
+
+Req 3. Buscar por numero de titulo SUNARP
+Menu/flujo: main.py opcion 3 - Buscar titulo SUNARP
+Funcion: buscar_titulo(), TituloRepository.buscar_por_titulo()
+Prueba: test_busqueda_operativa_es_por_titulo_y_muestra_partida
+Evidencia: titulo 393004 retorna item 1 y estado INSCRITO.
+
+Req 4. Actualizar estado y conservar historial
+Menu/flujo: main.py opcion 4 - Actualizar estado por titulo
+Funcion: actualizar_estado(), TituloRepository.actualizar_estado()
+Prueba: test_actualizar_estado_usa_titulo_y_graba_historial
+Evidencia: historial_estados registra estado anterior, nuevo y observacion.
+
+Req 5. Eliminar registros
+Menu/flujo: main.py opcion 5 - Eliminar titulo
+Funcion: eliminar_titulo(), TituloRepository.eliminar()
+Prueba: src/demo_profesor.py crea y elimina un registro temporal
+Evidencia: demo_temporal=0 despues de ejecutar la evidencia.
+
+Req 6. Reportar estados y avance por bloque
+Menu/flujo: main.py opciones 6 y 7
+Funcion: mostrar_estadisticas(), reporte_por_bloque()
+Prueba: sql/03_consultas_reportes.sql consultas 4 y 5
+Evidencia: vistas vw_resumen_estado y vw_avance_bloque.
+
+Req 7. Exportar resultados
+Menu/flujo: main.py opcion 8 - Exportar CSV desde SQL
+Funcion: exportar_csv(), TituloRepository.exportar_csv()
+Prueba: test_exportar_csv_incluye_partida
+Evidencia: salidas/resultados_seguimiento_sql.csv.
+
+Req 8. Validar partida como dato interno SQL
+Menu/flujo: main.py opcion 9 - Validar partida en SQL
+Funcion: buscar_partida_interna(), TituloRepository.buscar_por_partida()
+Prueba: test_partida_se_puede_validar_en_sql_sin_ser_consulta_sunarp
+Evidencia: partida P03010001 encuentra titulo 393004.
+
+Req 9. Ver historial de cambios
+Menu/flujo: main.py opcion 10 - Ver historial de cambios por titulo
+Funcion: ver_historial(), TituloRepository.historial_por_titulo()
+Prueba: test_historial_por_titulo_devuelve_trazabilidad
+Evidencia: seed demo incluye un historial inicial para titulo 393011.
+
+Req 10. Importar resultados desde CSV
+Menu/flujo: USO_SIMPLE.bat opcion 6
+Funcion: importar_resultados_csv.importar()
+Prueba: test_importar_csv_con_titulos_y_partidas_reales_de_control
+Evidencia: soporta filas con titulo y filas solo con partida para control SQL.

@@ -1,0 +1,42 @@
+EVIDENCIA TECNICA - SUNARP SQL
+========================================================================
+Fecha de generacion: 2026-06-27 17:59:15
+
+1. Resumen general de la base
+   total=50, con_titulo=50, con_partida=50, procesados=40
+
+2. Resumen por estado
+   INSCRITO                    11 (22.00%)
+   PENDIENTE                   10 (20.00%)
+   OBSERVADO                    9 (18.00%)
+   CALIFICACION                 8 (16.00%)
+   TACHADO                      7 (14.00%)
+   NO_ENCONTRADO                5 (10.00%)
+
+3. Busqueda operativa por titulo SUNARP
+   titulo=393004 -> item=1, partida=P03010001, estado=INSCRITO
+
+4. Validacion interna por partida SQL
+   partida=P03010001 -> coincidencias=1
+   item=1, titulo=393004, estado=INSCRITO
+   Nota: SUNARP se consulta por titulo; partida es control interno.
+
+5. Prueba CRUD temporal
+   CREATE: Titulo registrado correctamente.
+   READ/UPDATE: titulo=999999991, estado=OBSERVADO, partida=PDEMO999
+   HISTORIAL: 1 cambio(s) registrado(s)
+   DELETE: Titulo eliminado correctamente.
+
+6. Pendientes por bloque
+   bloque=01 -> 2 pendiente(s)
+   bloque=02 -> 2 pendiente(s)
+   bloque=03 -> 2 pendiente(s)
+   bloque=04 -> 1 pendiente(s)
+   bloque=05 -> 2 pendiente(s)
+   bloque=06 -> 2 pendiente(s)
+   bloque=07 -> 2 pendiente(s)
+   bloque=08 -> 1 pendiente(s)
+   bloque=09 -> 2 pendiente(s)
+   bloque=10 -> 2 pendiente(s)
+
+Resultado: evidencia generada sin dejar registros temporales.

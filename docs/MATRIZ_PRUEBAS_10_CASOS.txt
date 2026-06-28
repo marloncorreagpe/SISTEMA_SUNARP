@@ -1,0 +1,77 @@
+MATRIZ DE 10 PRUEBAS - SUNARP SQL
+=================================
+
+Formato: ID | Tipo | Entrada | Resultado esperado | Resultado obtenido
+
+P01 | Normal | Registrar titulo nuevo con datos validos
+Esperado: el sistema inserta el registro y confirma operacion.
+Obtenido: cubierto por src/demo_profesor.py, CREATE correcto.
+
+P02 | Normal | Buscar titulo 393004
+Esperado: muestra ficha del titulo, partida P03010001 y estado INSCRITO.
+Obtenido: test_busqueda_operativa_es_por_titulo_y_muestra_partida OK.
+
+P03 | Normal | Actualizar titulo 393018 a OBSERVADO
+Esperado: cambia estado y registra historial.
+Obtenido: test_actualizar_estado_usa_titulo_y_graba_historial OK.
+
+P04 | Normal | Exportar CSV desde SQL
+Esperado: crea salidas/resultados_seguimiento_sql.csv con columna partida.
+Obtenido: test_exportar_csv_incluye_partida OK.
+
+P05 | Normal | Validar partida P03010001 en SQL
+Esperado: encuentra el titulo 393004 como validacion interna.
+Obtenido: test_partida_se_puede_validar_en_sql_sin_ser_consulta_sunarp OK.
+
+P06 | Normal | Importar CSV con titulo y partida
+Esperado: inserta/actualiza registros y conserva la partida.
+Obtenido: test_importar_csv_con_titulos_y_partidas_reales_de_control OK.
+
+P07 | Limite | Cargar 50 registros demo
+Esperado: la base queda con 50 titulos simulados y vistas funcionales.
+Obtenido: evidencia_demo_profesor.txt muestra total=50.
+
+P08 | Limite | Importar fila sin titulo pero con partida
+Esperado: conserva la fila para control SQL, sin tratarla como consulta SUNARP.
+Obtenido: prueba de importacion OK; buscar_por_titulo no la confunde.
+
+P09 | Invalida | Ingresar opcion fuera de rango en menu
+Esperado: muestra mensaje y vuelve a pedir opcion sin cerrar programa.
+Obtenido: leer_entero() valida rango y reintenta.
+
+P10 | Invalida | Ingresar DNI/RUC con longitud incorrecta
+Esperado: muestra mensaje y reintenta.
+Obtenido: leer_dni_ruc() exige 8 u 11 digitos.
+
+Resumen
+-------
+6 pruebas normales: P01-P06.
+2 pruebas limite: P07-P08.
+2 pruebas invalidas: P09-P10.
+
+Automatizacion: 8 pruebas unittest en tests/test_integracion_sql.py (todas en verde).
+
+Correccion iterativa (fallo encontrado -> correccion, antes/despues)
+--------------------------------------------------------------------
+F01 | Migracion de indices duplicados
+  Antes:   sql/01_schema.sql crea los indices y sql/04_migracion intentaba
+           crearlos de nuevo, lo que producia el error "Duplicate key name".
+  Accion:  la migracion ahora consulta information_schema y solo crea el indice
+           si no existe (script idempotente).
+  Despues: la carga de base se ejecuta varias veces sin error.
+
+F02 | El formulario de registro borraba el mensaje de exito
+  Antes:   al guardar, la funcion _limpiar() vaciaba tambien el mensaje, asi que
+           el "[OK] Titulo registrado" desaparecia de inmediato.
+  Accion:  _limpiar(limpiar_mensaje=False); el mensaje de exito se fija despues
+           de limpiar los campos.
+  Despues: el usuario ve la confirmacion "[OK] Titulo registrado correctamente".
+
+F03 | El panel se caia con EOFError en ejecucion no interactiva
+  Antes:   input() lanzaba EOFError y terminaba el panel cuando no habia consola
+           interactiva (por ejemplo en pruebas automatizadas).
+  Accion:  pausar() y leer_opcion() capturan EOFError y continuan/retornan 0.
+  Despues: el panel no se interrumpe; las pruebas corren sin abortar.
+
+Las tres correcciones se verifican hoy: la base carga sin error, el formulario
+muestra la confirmacion y las 8 pruebas automaticas terminan en verde.

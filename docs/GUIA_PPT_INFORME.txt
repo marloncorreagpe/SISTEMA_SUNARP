@@ -1,0 +1,69 @@
+GUIA PARA PPT E INFORME
+======================
+
+Mensaje principal
+-----------------
+El proyecto automatiza el control de seguimiento de titulos registrales SUNARP
+mediante una aplicacion de consola conectada a una base de datos SQL.
+
+Negocio
+-------
+Una oficina de gestion documental trabaja con lotes de titulos registrales. Cada
+titulo debe ser revisado y controlado para saber si esta inscrito, observado,
+tachado, pendiente o en calificacion.
+
+Problema
+--------
+El seguimiento manual obliga a consultar y registrar titulo por titulo. Esto
+genera demora, errores de transcripcion, duplicados y poca visibilidad del avance
+por bloque.
+
+Solucion
+--------
+El sistema permite:
+- registrar titulos;
+- buscar por numero de titulo;
+- actualizar estados;
+- eliminar registros incorrectos;
+- generar resumen por estado;
+- medir avance por bloque;
+- exportar resultados desde SQL.
+
+Uso de SQL
+----------
+La base `sunarp_academico` guarda los titulos en la tabla
+`titulos_registrales`. Tambien existe `historial_estados` para auditar cambios.
+Los reportes se obtienen mediante vistas SQL:
+- `vw_resumen_estado`;
+- `vw_avance_bloque`.
+
+Arquitectura
+------------
+Interfaz:
+  `src/main.py`
+
+Conexion:
+  `src/database.py`
+
+CRUD y reportes:
+  `src/repository.py`
+
+Base de datos:
+  `sql/01_schema.sql`
+  `sql/02_seed_demo.sql`
+  `sql/03_consultas_reportes.sql`
+
+Codigo que conviene explicar
+----------------------------
+1. `registrar()` usa INSERT.
+2. `listar()` y `buscar_por_titulo()` usan SELECT.
+3. `actualizar_estado()` usa UPDATE y graba historial.
+4. `eliminar()` usa DELETE.
+5. `estadisticas_por_estado()` y `reporte_por_bloque()` usan vistas SQL.
+6. `importar_resultados_csv.py` demuestra como pasar resultados obtenidos a SQL.
+
+Frase para sustentacion
+-----------------------
+"La mejora principal es que el seguimiento ya no queda solo en memoria o en una
+hoja suelta: queda persistido en una base SQL, con busqueda, reportes, historial
+y posibilidad de integrarse a otros procesos."

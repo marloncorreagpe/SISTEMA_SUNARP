@@ -1,0 +1,108 @@
+============================================================
+  PROYECTO UNIVERSITARIO - SUNARP CON BASE DE DATOS SQL
+============================================================
+
+Este proyecto es una version academica del seguimiento de titulos
+registrales SUNARP. No depende de sistemas privados externos para ser
+presentado: usa Python, MySQL/MariaDB y una consola con menu.
+
+OBJETIVO
+--------
+Digitalizar el control de titulos registrales que antes se revisaban de
+forma manual. La base de datos SQL permite guardar, buscar, actualizar,
+eliminar y reportar los titulos con trazabilidad.
+
+ARQUITECTURA
+------------
+1. Interfaz de consola:
+   src/main.py
+
+2. Conexion SQL:
+   src/database.py
+   src/config.py
+
+3. Operaciones CRUD y reportes:
+   src/repository.py
+
+4. Base de datos:
+   sql/01_schema.sql
+   sql/02_seed_demo.sql
+   sql/04_migracion_partida_en_base.sql
+
+INSTALACION
+-----------
+1. Instalar XAMPP y activar MySQL/MariaDB.
+
+2. Instalar driver de Python:
+   pip install -r requirements.txt
+
+   Tambien puede ejecutar:
+   INSTALAR_DEPENDENCIAS.bat
+
+3. Crear la base y cargar datos demo desde phpMyAdmin o terminal:
+   sql/01_schema.sql
+   sql/04_migracion_partida_en_base.sql
+   sql/02_seed_demo.sql
+
+   Si XAMPP esta instalado en C:\xampp, tambien puede ejecutar:
+   CARGAR_BASE_DATOS.bat
+
+4. Ejecutar:
+   python src/main.py
+
+   Tambien puede ejecutar:
+   EJECUTAR_MENU.bat
+
+   Para una guia paso a paso de preparacion, pruebas e importacion:
+   USO_SIMPLE.bat
+
+5. Para abrir phpMyAdmin:
+   ABRIR_PHPMYADMIN.bat
+
+6. Para generar una evidencia tecnica reproducible:
+   python src/demo_profesor.py
+
+   Tambien esta disponible desde:
+   USO_SIMPLE.bat -> opcion 8
+
+CONFIGURACION OPCIONAL
+----------------------
+Por defecto se conecta a:
+  host: 127.0.0.1
+  puerto: 3306
+  usuario: root
+  clave: vacia
+  base: sunarp_academico
+
+Tambien se puede configurar con variables de entorno:
+  SUNARP_DB_HOST
+  SUNARP_DB_PORT
+  SUNARP_DB_USER
+  SUNARP_DB_PASSWORD
+  SUNARP_DB_NAME
+
+PUNTOS PARA SUSTENTACION
+------------------------
+- El negocio necesita controlar lotes de titulos registrales.
+- El problema manual genera demora, errores y falta de avance por bloque.
+- La solucion guarda los datos en SQL para tener persistencia real.
+- El programa aplica CRUD: crear, leer, actualizar y eliminar registros.
+- Los reportes usan consultas SQL agrupadas por estado y bloque.
+- La clave operativa es item/codigo; oficio es dato de negocio; titulo es
+  el dato consultado para seguimiento SUNARP.
+- La partida se guarda e indexa en SQL como dato de control interno; no se usa
+  como criterio de consulta SUNARP.
+
+IMPORTAR RESULTADOS DESDE CSV
+-----------------------------
+Si se tiene un archivo resultados_full.csv, se puede traspasar a SQL con:
+
+  python src/importar_resultados_csv.py "ruta\al\resultados_full.csv"
+
+ESTADO DE PRUEBA LOCAL
+----------------------
+La base fue probada con MariaDB 10.4.32 de XAMPP. Se cargaron 50 titulos demo,
+se verificaron las vistas de resumen y se ejecuto el menu con busqueda,
+estadisticas, reporte por bloque y exportacion CSV.
+Tambien se agregaron pruebas automaticas en tests/test_integracion_sql.py.
+La evidencia tecnica se genera en salidas/evidencia_demo_profesor.txt.
